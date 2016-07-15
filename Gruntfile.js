@@ -27,7 +27,7 @@ module.exports = function(grunt) {
 
             options: {
                 sourceMap: false,// Useless on the server side.
-                declaration: true,// Always useful to have declarations available.
+                declaration: false,
                 noEmitOnError: false,// Force log errors.
                 failOnTypeErrors: true,// Force log grunt errors pipeline.
                 verbose: true,
