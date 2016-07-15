@@ -31,12 +31,15 @@ module.exports = function(grunt) {
                 noEmitOnError: false,// Force log errors.
                 failOnTypeErrors: true,// Force log grunt errors pipeline.
                 verbose: true,
-                outDir:'api',
-                rootDir:'src',
-                watch:'.',
+                outDir:'./api',
+                rootDir:'./src',
                 module: 'commonjs',
+                moduleResolution: 'node',
                 target:'es5'
-            }
+            },
+            "exclude": [
+                "node_modules"
+            ]
         }
   });
   grunt.loadNpmTasks('grunt-ts');
