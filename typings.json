@@ -1,5 +1,20 @@
 {
+  "name": "rest-server",
   "dependencies": {
+    "es6-promise": "registry:npm/es6-promise#3.0.0+20160211003958",
+    "mime": "registry:npm/mime#1.3.0+20160423043021",
     "sails": "registry:npm/sails#0.12.0+20160610190623"
+  },
+  "globalDependencies": {
+    "connect": "registry:dt/connect#3.4.0+20160317120654",
+    "es6-shim": "registry:dt/es6-shim#0.31.2+20160602141504",
+    "express": "registry:dt/express#4.0.0+20160708185218",
+    "express-serve-static-core": "registry:dt/express-serve-static-core#4.0.0+20160711183608",
+    "node": "registry:dt/node#6.0.0+20160709114037",
+    "passport": "registry:dt/passport#0.2.0+20160317120654",
+    "promise": "registry:dt/promise#7.1.1+20160602154553",
+    "q": "registry:dt/q#0.0.0+20160613154756",
+    "serve-static": "registry:dt/serve-static#0.0.0+20160606155157",
+    "socket.io": "registry:dt/socket.io#1.4.4+20160317120654"
   }
 }
