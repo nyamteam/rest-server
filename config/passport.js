@@ -1,16 +1,44 @@
-/**
- * Passport configuration
- *
- * This if the configuration for your Passport.js setup and it where you'd
- * define the authentication strategies you want your application to employ.
- *
- * Also, authentication scopes can be set through the `scope` property.
- *
- * For more information on the available providers, check out:
- * http://passportjs.org/guide/providers/
- */
-module.exports.passport = {
-  local: {
-    strategy: require('passport-local').Strategy
-  }
-};
+var passport = require('passport'),
+LocalStrategy = require('passport-local').Strategy,
+bcrypt = require('bcrypt');
+
+console.log('passport init')
+  passport.serializeUser(function(user, done) {
+      done(null, user.id);
+  });
+  passport.deserializeUser(function(id, done) {
+      User.findOne({ id: id } , function (err, user) {
+          done(err, user);
+      });
+  });
+
+  passport.use(new LocalStrategy({
+      usernameField: 'name',
+      passwordField: 'password'
+    },
+    function(name, password, done) {
+      console.log('strat call')
+      User.findOne({ name: name }, function (err, user) {
+        if (err) { return done(err); }
+        if (!user) {
+          return done(null, false, { message: 'Incorrect name.' });
+        }
+
+        bcrypt.compare(password, user.password, function (err, res) {
+            if (!res)
+              return done(null, false, {
+                message: 'Invalid Password'
+              });
+            var returnUser = {
+              name: user.name,
+              createdAt: user.createdAt,
+              id: user.id
+            };
+            return done(null, returnUser, {
+              message: 'Logged In Successfully'
+            });
+          });
+      });
+    }
+  ));
+

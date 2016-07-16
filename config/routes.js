@@ -47,9 +47,6 @@ module.exports.routes = {
   ***************************************************************************/
   
   // Authentication routes
+  'POST /login': 'AuthController.login',
   '/logout': 'AuthController.logout',
-  'POST /login': 'AuthController.callback',
-  'POST /login/:action': 'AuthController.callback',
-  'POST /auth/local': 'AuthController.callback',
-  'POST /auth/local/:action': 'AuthController.callback'
 };

@@ -37,9 +37,9 @@ module.exports.http = {
       'startRequestTimer',
       'cookieParser',
       'session',
-      //'myRequestLogger',
-      'passportInit',            // <==== passport HTTP middleware should run after "session"
-      'passportSession',         // <==== (see https://github.com/jaredhanson/passport#middleware)
+      'passportInit',            
+      'passportSession', 
+      //'myRequestLogger',       
       'bodyParser',
       'handleBodyParserError',
       'compress',

@@ -1,5 +1,5 @@
 "use strict";
-function index(req, res) {
-    return res.send("index");
+function init(req, res) {
+    return res.json(200, true);
 }
-exports.index = index;
+exports.init = init;

@@ -5,6 +5,7 @@
     "sails": "registry:npm/sails#0.12.0+20160610190623"
   },
   "globalDependencies": {
+    "bcrypt": "registry:dt/bcrypt#0.0.0+20160316155526",
     "connect": "registry:dt/connect#3.4.0+20160317120654",
     "es6-shim": "registry:dt/es6-shim#0.31.2+20160602141504",
     "express": "registry:dt/express#4.0.0+20160708185218",
