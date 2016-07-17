@@ -1,44 +1,50 @@
-"use strict";
-var sails = require('sails');
 var passport = require('passport');
-var passport_local = require('passport-local');
-var bcrypt = require('bcrypt');
+
+/**
+ * Passport Middleware
+ *
+ * Policy for Sails that initializes Passport.js and as well as its built-in
+ * session support.
+ *
+ * In a typical web application, the credentials used to authenticate a user
+ * will only be transmitted during the login request. If authentication
+ * succeeds, a session will be established and maintained via a cookie set in
+ * the user's browser.
+ *
+ * Each subsequent request will not contain credentials, but rather the unique
+ * cookie that identifies the session. In order to support login sessions,
+ * Passport will serialize and deserialize user instances to and from the
+ * session.
+ *
+ * For more information on the Passport.js middleware, check out:
+ * http://passportjs.org/guide/configure/
+ *
+ * @param {Object}   req
+ * @param {Object}   res
+ * @param {Function} next
+ */
+var http = require('http');
+var methods = ['login', 'logIn', 'logout', 'logOut', 'isAuthenticated', 'isUnauthenticated'];
+
 module.exports = function (req, res, next) {
-    sails.log.verbose(__filename + ':' + ' [Policy.Passport() called]');
-    var LocalStrategy = passport_local.Strategy;
-    passport.serializeUser(function (user, done) {
-        done(null, user.id);
-    });
-    passport.deserializeUser(function (id, done) {
-        sails.models.User.findOne({ id: id }, function (err, user) {
-            done(err, user);
+  var passport = require('passport');
+
+  // Initialize Passport
+  passport.initialize()(req, res, function () {
+    // Use the built-in sessions
+    passport.session()(req, res, function () {
+
+      // Make the request's passport methods available for socket
+      if (req.isSocket) {
+        _.each(methods, function (method) {
+          req[method] = http.IncomingMessage.prototype[method].bind(req);
         });
+      }
+
+      // Make the user available throughout the frontend (for views)
+      res.locals.user = req.user;
+      console.log('policies.passport')
+      next();
     });
-    var login = function (username, password, done) {
-        sails.log.verbose(__filename + ':' + ' [service.passport.login() called]');
-        console.log("service.passport.login");
-        sails.models.model.User.findOne({ name: username }, function (err, user) {
-            if (err) {
-                return done(err);
-            }
-            if (!user) {
-                return done(null, false, { message: 'Incorrect username.' });
-            }
-            bcrypt.compare(password, user.password, function (err, res) {
-                if (!res)
-                    return done(null, false, {
-                        message: 'Invalid Password'
-                    });
-                return done(null, user, {
-                    message: 'Logged In Successfully'
-                });
-            });
-        });
-    };
-    passport.use(new LocalStrategy({
-        usernameField: 'name',
-        passwordField: 'password'
-    }, login));
-    console.log('Passport init');
-    passport.initialize()(req, res, next);
+  });
 };

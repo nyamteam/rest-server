@@ -1,32 +1,56 @@
-"use strict";
-var bcrypt = require('bcrypt');
-exports.attributes = {
-    name: {
-        type: 'string',
-        required: true,
+var _ = require('lodash');
+var crypto = require('crypto');
+
+/** @module User */
+module.exports = {
+  attributes: {
+    username: {
+      type: 'string',
+      unique: true,
+      index: true,
+      notNull: true
     },
-    password: {
-        type: 'string',
-        required: true
+    email: {
+      type: 'email',
+      unique: true,
+      index: true
     },
+    passports: {
+      collection: 'Passport',
+      via: 'user'
+    },
+
+    getGravatarUrl: function () {
+      var md5 = crypto.createHash('md5');
+      md5.update(this.email || '');
+      return 'https://gravatar.com/avatar/'+ md5.digest('hex');
+    },
+
     toJSON: function () {
-        var obj = this.toObject();
-        delete obj.password;
-        return obj;
+      var user = this.toObject();
+      delete user.password;
+      user.gravatarUrl = this.getGravatarUrl();
+      return user;
     }
-};
-function beforeCreate(user, cb) {
-    bcrypt.genSalt(10, function (err, salt) {
-        bcrypt.hash(user.password, salt, function (err, hash) {
-            if (err) {
-                console.log(err);
-                cb(err);
-            }
-            else {
-                user.password = hash;
-                cb();
-            }
-        });
+  },
+
+  beforeCreate: function (user, next) {
+    if (_.isEmpty(user.username)) {
+      user.username = user.email;
+    }
+    next();
+  },
+
+  /**
+   * Register a new User with a passport
+   */
+  register: function (user) {
+    return new Promise(function (resolve, reject) {
+      sails.services.passport.protocols.local.createUser(user, function (error, created) {
+        if (error) return reject(error);
+
+        resolve(created);
+      });
     });
-}
-exports.beforeCreate = beforeCreate;
+  }
+};

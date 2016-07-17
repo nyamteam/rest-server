@@ -26,7 +26,7 @@ module.exports.policies = {
   *                                                                          *
   ***************************************************************************/
 
-  '*': ['isAuthenticated'],
+  '*': true,
 
   /***************************************************************************
   *                                                                          *
@@ -35,11 +35,12 @@ module.exports.policies = {
   *                                                                          *
   ***************************************************************************/
 	UserController: {
+    '*': 'isAuthenticated',
     'create': true
   },
 
-  'AuthController': {
-    '*': true,
+  AuthController: {
+    '*': [ 'passport' ]
   }
   
   // RabbitController: {
