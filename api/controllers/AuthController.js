@@ -1,6 +1,6 @@
 "use strict";
 var passport = require('passport');
-function login(req, res) {
+function login(req, res, next) {
     passport.authenticate('local', function (err, user, info) {
         if ((err) || (!user)) {
             return res.send({
@@ -16,7 +16,7 @@ function login(req, res) {
                 user: user
             });
         });
-    })(req, res, null);
+    })(req, res, next);
 }
 exports.login = login;
 function logout(req, res) {
@@ -28,7 +28,7 @@ function logout(req, res) {
 exports.logout = logout;
 function authenticated(req, res) {
     if (req.isAuthenticated()) {
-        return res.json(200, true);
+        return res.json(200, req.user);
     }
     else {
         return res.json(200, false);

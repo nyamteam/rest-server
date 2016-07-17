@@ -4,6 +4,8 @@ module.exports = function (req, res, next) {
         return next();
     }
     else {
-        return res.send(401, 'Need to be logged');
+        return res.send(401, {
+            message: 'Need to be logged'
+        });
     }
 };

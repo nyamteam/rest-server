@@ -16,7 +16,7 @@ import * as passport from 'passport'
  * @param   {sails.Request}   req    Request object
  * @param   {sails.Response}  res    Response object
  */
-export function login(req, res, next) {
+export function login(req:sails.Request, res:sails.Response, next) {
 
         passport.authenticate('local', function(err, user, info) {
                 if ((err) || (!user)) {
@@ -64,9 +64,9 @@ export function logout(req:sails.Request, res:sails.Response): sails.Response {
  * @param   {sails.Request}   req    Request object
  * @param   {sails.Response}  res    Response object
  */
-export function authenticated(req:sails.Request, res:sails.Response): sails.Response {
+export function authenticated(req, res:sails.Response): sails.Response {
         if (req.isAuthenticated()) {
-                return res.json(200, /*res.user*/true)
+                return res.json(200, req.user)
         } else {
                 return res.json(200, false)
         }

@@ -7,6 +7,8 @@ module.exports = function(req:sails.Request, res:sails.Response, next) {
         return next();
     }
     else{
-        return res.send(401, 'Need to be logged');
+        return res.send(401, {
+                        message: 'Need to be logged'
+                    });
     }
 };
