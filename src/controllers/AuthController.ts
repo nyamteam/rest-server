@@ -51,7 +51,9 @@ export function login(req, res) {
 export function logout(req:sails.Request, res:sails.Response): sails.Response {
         req.logout();
 
-        return res.json(200, true);
+        return res.json({
+                        message: 'Logout succed'
+                });
 }
 
 /**
