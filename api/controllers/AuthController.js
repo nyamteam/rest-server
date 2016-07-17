@@ -21,7 +21,9 @@ function login(req, res) {
 exports.login = login;
 function logout(req, res) {
     req.logout();
-    return res.json(200, true);
+    return res.json({
+        message: 'Logout succed'
+    });
 }
 exports.logout = logout;
 function authenticated(req, res) {

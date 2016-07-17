@@ -16,7 +16,7 @@ import * as passport from 'passport'
  * @param   {sails.Request}   req    Request object
  * @param   {sails.Response}  res    Response object
  */
-export function login(req, res) {
+export function login(req, res, next) {
 
         passport.authenticate('local', function(err, user, info) {
                 if ((err) || (!user)) {
@@ -32,7 +32,7 @@ export function login(req, res) {
                                 user: user
                         });
                 });
-        })(req, res, null);
+        })(req, res, next);
 }
 
 /**
