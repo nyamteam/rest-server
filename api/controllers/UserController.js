@@ -1,11 +1,5 @@
-/**
- * UserController
- *
- * @description :: Server-side logic for managing users
- * @help        :: See http://links.sailsjs.org/docs/controllers
- */
-
-module.exports = {
-	
-};
-
+"use strict";
+function init(req, res) {
+    return res.json(200, true);
+}
+exports.init = init;

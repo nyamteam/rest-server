@@ -3,7 +3,6 @@
 import * as sails from 'sails'
 import * as passport from 'passport'
 
-
 /**
  * Login callback to log a user
  *
@@ -17,31 +16,23 @@ import * as passport from 'passport'
  * @param   {sails.Request}   req    Request object
  * @param   {sails.Response}  res    Response object
  */
+export function login(req, res) {
 
-export function login(req:sails.Request, res:sails.Response): any {
-        console.log('auth.login')
-        //console.log(req)
-        passport.authenticate('local', function(err, user, info){
-                console.log(user)
+        passport.authenticate('local', function(err, user, info) {
                 if ((err) || (!user)) {
-                        console.log('err:')
-                        console.log(err)
-                        console.log(info)
                         return res.send({
                                 message: info.message,
                                 user: user
                         });
                 }
                 req.logIn(user, function(err) {
-                        console.log('req.logIn:')
-                        console.log(user)
-                        if(err) return res.send(err)
+                if (err) res.send(err);
                         return res.send({
                                 message: info.message,
                                 user: user
-                        })
-                })
-        }).call(req, res)
+                        });
+                });
+        })(req, res, null);
 }
 
 /**
