@@ -1,9 +1,8 @@
-"use strict";
-module.exports = function (req, res, next) {
-    if (req.isAuthenticated()) {
+module.exports = function(req, res, next) {
+   if (req.isAuthenticated()) {
         return next();
     }
-    else {
-        return res.send(401, 'Need to be logged');
+    else{
+        return res.send(401);
     }
 };

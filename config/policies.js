@@ -34,15 +34,10 @@ module.exports.policies = {
   * and its actions                                                          *
   *                                                                          *
   ***************************************************************************/
-	UserController: {
-    '*': 'isAuthenticated',
-    'create': true
-  },
-
-  AuthController: {
-    '*': [ 'passport' ]
-  }
-  
+	  UserController: {
+      '*': 'isAuthenticated',
+      'create': true
+    }
   // RabbitController: {
 
 		// Apply the `false` policy as the default for all of RabbitController's actions

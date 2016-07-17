@@ -1,56 +1,42 @@
-var _ = require('lodash');
-var crypto = require('crypto');
+/**
+* User.js
+*
+* @description :: TODO: You might write a short summary of how this model works and what it represents here.
+* @docs        :: http://sailsjs.org/#!documentation/models
+*/
 
-/** @module User */
+var bcrypt = require('bcrypt');
+
 module.exports = {
-  attributes: {
-    username: {
-      type: 'string',
-      unique: true,
-      index: true,
-      notNull: true
+    attributes: {
+        email: {
+            type: 'email',
+            required: true,
+            unique: true
+        },
+        password: {
+            type: 'string',
+            minLength: 6,
+            required: true
+        },
+        toJSON: function() {
+            var obj = this.toObject();
+            delete obj.password;
+            return obj;
+        }
     },
-    email: {
-      type: 'email',
-      unique: true,
-      index: true
-    },
-    passports: {
-      collection: 'Passport',
-      via: 'user'
-    },
-
-    getGravatarUrl: function () {
-      var md5 = crypto.createHash('md5');
-      md5.update(this.email || '');
-      return 'https://gravatar.com/avatar/'+ md5.digest('hex');
-    },
-
-    toJSON: function () {
-      var user = this.toObject();
-      delete user.password;
-      user.gravatarUrl = this.getGravatarUrl();
-      return user;
+    beforeCreate: function(user, cb) {
+        bcrypt.genSalt(10, function(err, salt) {
+            bcrypt.hash(user.password, salt, function(err, hash) {
+                if (err) {
+                    console.log(err);
+                    cb(err);
+                } else {
+                    user.password = hash;
+                    cb();
+                }
+            });
+        });
     }
-  },
-
-  beforeCreate: function (user, next) {
-    if (_.isEmpty(user.username)) {
-      user.username = user.email;
-    }
-    next();
-  },
-
-  /**
-   * Register a new User with a passport
-   */
-  register: function (user) {
-    return new Promise(function (resolve, reject) {
-      sails.services.passport.protocols.local.createUser(user, function (error, created) {
-        if (error) return reject(error);
-
-        resolve(created);
-      });
-    });
-  }
 };
+

@@ -1,87 +1,43 @@
-/**
- * Passport configuration
- *
- * This is the configuration for your Passport.js setup and it where you'd
- * define the authentication strategies you want your application to employ.
- *
- * Authentication scopes can be set through the `scope` property.
- *
- * For more information on the available providers, check out:
- * http://passportjs.org/guide/providers/
- */
+var passport = require('passport'),
+LocalStrategy = require('passport-local').Strategy,
+bcrypt = require('bcrypt');
 
-module.exports.passport = {
-  local: {
-    strategy: require('passport-local').Strategy
-  },
+passport.serializeUser(function(user, done) {
+    done(null, user.id);
+});
 
-  basic: {
-    strategy: require('passport-http').BasicStrategy,
-    protocol: 'basic'
-  },
+passport.deserializeUser(function(id, done) {
+    User.findOne({ id: id } , function (err, user) {
+        done(err, user);
+    });
+});
 
-  /*
-  bearer: {
-    strategy: require('passport-http-bearer').Strategy,
-    protocol: 'bearer'
+passport.use(new LocalStrategy({
+    usernameField: 'email',
+    passwordField: 'password'
   },
-  google: {
-    name: 'Google',
-    protocol: 'oauth2',
-    strategy: require('passport-google-oauth').OAuth2Strategy,
-    options: {
-      clientID: 'your-client-id',
-      clientSecret: 'your-client-secret',
-      scope: ['profile', 'email']
-    }
+  function(email, password, done) {
+
+    User.findOne({ email: email }, function (err, user) {
+      if (err) { return done(err); }
+      if (!user) {
+        return done(null, false, { message: 'Incorrect email.' });
+      }
+
+      bcrypt.compare(password, user.password, function (err, res) {
+          if (!res)
+            return done(null, false, {
+              message: 'Invalid Password'
+            });
+          var returnUser = {
+            email: user.email,
+            createdAt: user.createdAt,
+            id: user.id
+          };
+          return done(null, returnUser, {
+            message: 'Logged In Successfully'
+          });
+        });
+    });
   }
-  twitter: {
-    name: 'Twitter',
-    protocol: 'oauth',
-    strategy: require('passport-twitter').Strategy,
-    options: {
-      consumerKey: 'your-consumer-key',
-      consumerSecret: 'your-consumer-secret'
-    }
-  },
-  github: {
-    name: 'GitHub',
-    protocol: 'oauth2',
-    strategy: require('passport-github').Strategy,
-    options: {
-      clientID: 'your-client-id',
-      clientSecret: 'your-client-secret'
-    }
-  },
-  facebook: {
-    name: 'Facebook',
-    protocol: 'oauth2',
-    strategy: require('passport-facebook').Strategy,
-    options: {
-      clientID: 'your-client-id',
-      clientSecret: 'your-client-secret'
-    }
-  }
-  youtube: {
-    name: 'Youtube',
-    protocol: 'oauth2',
-    strategy: require('passport-youtube').Strategy,
-    options: {
-      clientID: 'your-client-id',
-      clientSecret: 'your-client-secret'
-    },
-  },
-  'youtube-v3': {
-    name: 'Youtube',
-    protocol: 'oauth2',
-    strategy: require('passport-youtube-v3').Strategy,
-    options: {
-      clientID: 'your-client-id',
-      clientSecret: 'your-client-secret'
-      // Scope: see https://developers.google.com/youtube/v3/guides/authentication
-      scope: [ 'https://www.googleapis.com/auth/youtube.readonly' ],
-    },
-  },
-  */
-
-};
+));
