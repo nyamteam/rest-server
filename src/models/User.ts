@@ -3,10 +3,10 @@
 import * as bcrypt  from 'bcrypt'
 
 export const attributes = {
-    name: { 
+    email: { 
             type: 'string' ,
             required: true,
-            //unique: true
+            unique: true
     }, 
     password: { 
             type: 'string',

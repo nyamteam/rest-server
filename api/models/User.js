@@ -1,9 +1,10 @@
 "use strict";
 var bcrypt = require('bcrypt');
 exports.attributes = {
-    name: {
+    email: {
         type: 'string',
         required: true,
+        unique: true
     },
     password: {
         type: 'string',
