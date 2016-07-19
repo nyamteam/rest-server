@@ -31,6 +31,7 @@ passport.use(new LocalStrategy({
             });
           var returnUser = {
             email: user.email,
+            balance: user.balance,
             createdAt: user.createdAt,
             id: user.id
           };

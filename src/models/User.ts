@@ -12,6 +12,10 @@ export const attributes = {
             type: 'string',
             required: true
     },
+    balance: { 
+            type: 'float',
+            required: true
+    },
     toJSON: function() {
             var obj = this.toObject()
             delete obj.password

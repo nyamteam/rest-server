@@ -12,8 +12,7 @@ exports.attributes = {
     },
     balance: {
         type: 'float',
-        required: true,
-        defaultsTo: '100'
+        required: true
     },
     toJSON: function () {
         var obj = this.toObject();
