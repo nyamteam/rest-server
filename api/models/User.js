@@ -10,6 +10,10 @@ exports.attributes = {
         type: 'string',
         required: true
     },
+        type: 'float',
+        required: true,
+        defaultsTo: '100'
+    },
     toJSON: function () {
         var obj = this.toObject();
         delete obj.password;
