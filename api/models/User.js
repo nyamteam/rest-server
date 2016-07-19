@@ -10,6 +10,7 @@ exports.attributes = {
         type: 'string',
         required: true
     },
+    balance: {
         type: 'float',
         required: true,
         defaultsTo: '100'
