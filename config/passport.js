@@ -18,27 +18,28 @@ passport.use(new LocalStrategy({
   },
   function(email, password, done) {
 
-    User.findOne({ email: email }, function (err, user) {
-      if (err) { return done(err); }
+    User.findOne({ email: email }).populate('services').exec(function(err, user) {
+      if (err) { return done(err) }
       if (!user) {
-        return done(null, false, { message: 'Incorrect email.' });
+        return done(null, false, { message: 'Incorrect email.' })
       }
-
+      user
       bcrypt.compare(password, user.password, function (err, res) {
           if (!res)
             return done(null, false, {
               message: 'Invalid Password'
-            });
+            })
           var returnUser = {
             email: user.email,
             balance: user.balance,
             createdAt: user.createdAt,
-            id: user.id
+            id: user.id,
+            services: user.services
           };
           return done(null, returnUser, {
             message: 'Logged In Successfully'
-          });
-        });
-    });
+          })
+        })
+    })
   }
-));
+))

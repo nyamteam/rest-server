@@ -15,6 +15,10 @@ exports.attributes = {
         required: true,
         defaultsTo: 100
     },
+    services: {
+        collection: 'Service',
+        via: 'owner'
+    },
     toJSON: function () {
         var obj = this.toObject();
         delete obj.password;
